@@ -4,6 +4,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {CurrencyProvider} from './src/store/CurrencyContext';
 import ConverterScreen from './src/screens/ConverterScreen';
@@ -40,7 +41,7 @@ export default function App() {
               },
             }}>
             <Tab.Navigator
-              screenOptions={{
+              screenOptions={({route}) => ({
                 headerShown: false,
                 tabBarStyle: {
                   backgroundColor: Colors.surfaceContainerLow,
@@ -53,10 +54,25 @@ export default function App() {
                 tabBarInactiveTintColor: Colors.onSurfaceVariant,
                 tabBarLabelStyle: {
                   fontSize: 11,
-                  fontWeight: '500',
+                  fontWeight: '500' as const,
                 },
-                tabBarIcon: () => null,
-              }}>
+                tabBarIcon: ({color, size}) => {
+                  const icons: Record<string, string> = {
+                    Converter: 'swap-horizontal',
+                    Rates: 'trending-up',
+                    Categories: 'grid',
+                    History: 'time',
+                    Settings: 'settings',
+                  };
+                  return (
+                    <Ionicons
+                      name={icons[route.name] ?? 'ellipse'}
+                      size={size}
+                      color={color}
+                    />
+                  );
+                },
+              })}>
               <Tab.Screen name="Converter" component={ConverterScreen} />
               <Tab.Screen name="Rates" component={RatesScreen} />
               <Tab.Screen name="Categories" component={CategoriesScreen} />
